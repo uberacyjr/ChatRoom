@@ -1,7 +1,70 @@
 ﻿@page "/"
+@using ChatRoom.Domain.Services.Report
+@using ChatRoom.Data.Model
+@using ChatRoom.Domain.Model
+@using ChatRoom.Shared.Services
 
-<h1>Hello, world!</h1>
+<h3>Chat Form</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="userName">User Name</label>
+            <input @bind-value="Event.User.Name" type="text" class="form-control" id="userName">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="eventTypeDescription">Event Type</label>
+            <select class="custom-select" @bind="Event.EventType.Description">
+                <option value="Select" selected disabled="disabled">(Choose Event)</option>
+                @foreach (var eventType in EventTypes)
+                {
+                    <option value="@eventType"> @eventType</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="eventDate">Event Date</label>
+            <input @bind-value="Event.InsertedDate" type="datetime" class="form-control" id="eventDate">
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary" @onclick="SaveEvent">Save</button>
 
-Welcome to your new app.
+<h3>Reports by Minute</h3>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@foreach (var item in ReportResultMinute)
+{
+    <div>@item.AggregationLevel: @item.Description</div>
+}
+
+<h3>Reports by Hour</h3>
+@foreach (var item in ReportResultHourly)
+{
+    <div>@item.AggregationLevel: @item.Description</div>
+}
+
+@code{
+
+    [Inject]
+    private IChatReportService ChatReportService { get; set; }
+    public List<ChatReportDto> ReportResultMinute { get; set; } = new();
+    public List<ChatReportDto> ReportResultHourly { get; set; } = new();
+    public Event Event { get; set; } = new();
+    public List<Event> Events { get; set; } = new();
+    public List<string> EventTypes { get; set; } = ConstantsHelperService.GetEventTypeConstants();
+
+    protected override void OnInitialized()
+    {
+    }
+
+    public void SaveEvent()
+    {
+        Events.Add(new Event("", Event.User.Name, Event.EventType.Description, Event.InsertedDate));
+
+        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggreationLevel(Events).ToList();
+        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggreationLevel(Events).ToList();
+    }
+}
