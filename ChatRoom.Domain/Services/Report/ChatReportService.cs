@@ -1,5 +1,6 @@
 ﻿using ChatRoom.Data;
-using ChatRoom.Domain.Models;
+using ChatRoom.Domain.DataTransferObjects;
+using ChatRoom.Shared.Constants;
 using ChatRoom.Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -69,9 +70,16 @@ namespace ChatRoom.Domain.Services.Report
 
                     if (!groupedEventType.SelectMany(s => s.Users).Any())
                     {
-                        result.Descriptions.Add($"{totalEvents} " +
+                        if (eventDescription.Description == EventConstants.Comment)
+                        {
+                            result.Descriptions.Add($"{totalEvents} {eventDescription.Description}");
+                        }
+                        else
+                        {
+                            result.Descriptions.Add($"{totalEvents} " +
                             $"{FormatStringHelper.GetPersonOrPeopleDescription(totalEvents)} " +
                             $"{eventDescription.Description}");
+                        }
                     }
 
                     var totalUserSentInteraction = groupedEventType.SelectMany(s => s.Users).Count();

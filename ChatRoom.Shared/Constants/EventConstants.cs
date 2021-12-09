@@ -6,5 +6,7 @@
         public const string LeaveTheRoom = "leave(s) the room";
         public const string Comment = "comments";
         public const string HightFiveAnotherUser = "high five";
+        public const string People = "people";
+        public const string Person = "person";
     }
 }

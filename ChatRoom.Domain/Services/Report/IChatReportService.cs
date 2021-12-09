@@ -1,4 +1,4 @@
-﻿using ChatRoom.Domain.Models;
+﻿using ChatRoom.Domain.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 

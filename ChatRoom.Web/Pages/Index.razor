@@ -1,53 +1,73 @@
 ﻿@page "/"
 @using ChatRoom.Domain.Services.Report
-@using ChatRoom.Domain.Models
-
+@using ChatRoom.Domain.DataTransferObjects
 <div class="row">
-    <div class="col-md-5">
-        <h3>Report by Minute</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var resultByMinute in ReportResultMinute)
-                {
-                    <tr>
-                        <td>@resultByMinute.AggregationLevel: @resultByMinute.Description</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <div class="form-group mb-2">
+        <label for="dateFilter" class="sr-only">Date Filter</label>
     </div>
+    <div class="form-group form-group ml-3 mr-2 mb-2">
+        <input type="date" @bind-value="DateFilter" class="form-control" id="dateFilter">
+    </div>
+    <button type="button" class="btn btn-primary mb-2" @onclick="LoadReports">Apply Filter</button>
 </div>
 
 <div class="row">
-    <div class="cold-md-5">
-        <h3>Report by Hour</h3>
-        @foreach (var resultByHour in ReportResultHourly)
-        {
-            <div>@resultByHour.AggregationLevel</div>
-            <ul>
-                @foreach (var description in resultByHour.Descriptions)
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Report by Minute</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var resultByMinute in ReportResultMinute)
+                        {
+                            <tr>
+                                <td>@resultByMinute.AggregationLevel: @resultByMinute.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Report by Hour</h5>
+                @foreach (var resultByHour in ReportResultHourly)
                 {
-                    <li>@description</li>
+                    <div>@resultByHour.AggregationLevel</div>
+                    <ul>
+                        @foreach (var description in resultByHour.Descriptions)
+                        {
+                            <li>@description</li>
+                        }
+                    </ul>
                 }
-            </ul>
-        }
+            </div>
+        </div>
     </div>
 </div>
-
 @code{
     [Inject]
     private IChatReportService ChatReportService { get; set; }
     public List<ChatReportDto> ReportResultMinute { get; set; } = new();
     public List<ChatReportDto> ReportResultHourly { get; set; } = new();
+    protected DateTime DateFilter { get; set; } = DateTime.Now;
 
     protected override void OnInitialized()
     {
-        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggregationLevel(DateTime.Now).ToList();
-        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggregationLevel(DateTime.Now).ToList();
+        LoadReports();
+    }
+
+    public void LoadReports()
+    {
+        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggregationLevel(DateFilter).ToList();
+        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggregationLevel(DateFilter).ToList();
     }
 }

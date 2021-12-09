@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ChatRoom.Domain.Models
+namespace ChatRoom.Domain.DataTransferObjects
 {
     public class ChatReportDto
     {
