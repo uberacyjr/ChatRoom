@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ChatRoom.Data\ChatRoom.Data.csproj" />
+    <ProjectReference Include="..\ChatRoom.Shared\ChatRoom.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,53 @@
 ﻿@page "/"
+@using ChatRoom.Domain.Services.Report
+@using ChatRoom.Domain.Models
 
-<h1>Hello, world!</h1>
+<div class="row">
+    <div class="col-md-5">
+        <h3>Report by Minute</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var resultByMinute in ReportResultMinute)
+                {
+                    <tr>
+                        <td>@resultByMinute.AggregationLevel: @resultByMinute.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-Welcome to your new app.
+<div class="row">
+    <div class="cold-md-5">
+        <h3>Report by Hour</h3>
+        @foreach (var resultByHour in ReportResultHourly)
+        {
+            <div>@resultByHour.AggregationLevel</div>
+            <ul>
+                @foreach (var description in resultByHour.Descriptions)
+                {
+                    <li>@description</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code{
+    [Inject]
+    private IChatReportService ChatReportService { get; set; }
+    public List<ChatReportDto> ReportResultMinute { get; set; } = new();
+    public List<ChatReportDto> ReportResultHourly { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggreationLevel().ToList();
+        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggreationLevel().ToList();
+    }
+}
