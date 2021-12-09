@@ -18,10 +18,20 @@ namespace ChatRoom.Data.Model
             EventType = new EventType(eventDescripton);
         }
 
+        public Event(string userName, string eventDescripton, 
+                     DateTime insertedDate, EventInteraction eventInteraction)
+        {
+            InsertedDate = insertedDate;
+            User = new User(userName);
+            EventType = new EventType(eventDescripton);
+            EventInteraction = eventInteraction;
+        }
+
         public int Id { get; set; }
         public string Comment { get; set; }
         public DateTime InsertedDate { get; set; }
         public EventType EventType { get; set; }
         public User User { get; set; }
+        public EventInteraction EventInteraction { get; set; }
     }
 }

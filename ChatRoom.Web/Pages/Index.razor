@@ -1,70 +1,53 @@
 ﻿@page "/"
 @using ChatRoom.Domain.Services.Report
-@using ChatRoom.Data.Model
-@using ChatRoom.Domain.Model
-@using ChatRoom.Shared.Services
+@using ChatRoom.Domain.Models
 
-<h3>Chat Form</h3>
 <div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="userName">User Name</label>
-            <input @bind-value="Event.User.Name" type="text" class="form-control" id="userName">
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="eventTypeDescription">Event Type</label>
-            <select class="custom-select" @bind="Event.EventType.Description">
-                <option value="Select" selected disabled="disabled">(Choose Event)</option>
-                @foreach (var eventType in EventTypes)
+    <div class="col-md-5">
+        <h3>Report by Minute</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var resultByMinute in ReportResultMinute)
                 {
-                    <option value="@eventType"> @eventType</option>
+                    <tr>
+                        <td>@resultByMinute.AggregationLevel: @resultByMinute.Description</td>
+                    </tr>
                 }
-            </select>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="eventDate">Event Date</label>
-            <input @bind-value="Event.InsertedDate" type="datetime" class="form-control" id="eventDate">
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
-<button class="btn btn-primary" @onclick="SaveEvent">Save</button>
 
-<h3>Reports by Minute</h3>
-
-@foreach (var item in ReportResultMinute)
-{
-    <div>@item.AggregationLevel: @item.Description</div>
-}
-
-<h3>Reports by Hour</h3>
-@foreach (var item in ReportResultHourly)
-{
-    <div>@item.AggregationLevel: @item.Description</div>
-}
+<div class="row">
+    <div class="cold-md-5">
+        <h3>Report by Hour</h3>
+        @foreach (var resultByHour in ReportResultHourly)
+        {
+            <div>@resultByHour.AggregationLevel</div>
+            <ul>
+                @foreach (var description in resultByHour.Descriptions)
+                {
+                    <li>@description</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
 
 @code{
-
     [Inject]
     private IChatReportService ChatReportService { get; set; }
     public List<ChatReportDto> ReportResultMinute { get; set; } = new();
     public List<ChatReportDto> ReportResultHourly { get; set; } = new();
-    public Event Event { get; set; } = new();
-    public List<Event> Events { get; set; } = new();
-    public List<string> EventTypes { get; set; } = ConstantsHelperService.GetEventTypeConstants();
 
     protected override void OnInitialized()
     {
-    }
-
-    public void SaveEvent()
-    {
-        Events.Add(new Event("", Event.User.Name, Event.EventType.Description, Event.InsertedDate));
-
-        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggreationLevel(Events).ToList();
-        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggreationLevel(Events).ToList();
+        ReportResultHourly = ChatReportService.GetChatReportByHourlyAggreationLevel().ToList();
+        ReportResultMinute = ChatReportService.GetChatReportByMinuteAggreationLevel().ToList();
     }
 }

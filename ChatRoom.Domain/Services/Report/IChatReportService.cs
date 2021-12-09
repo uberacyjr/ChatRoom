@@ -1,12 +1,11 @@
-﻿using ChatRoom.Data.Model;
-using ChatRoom.Domain.Model;
+﻿using ChatRoom.Domain.Models;
 using System.Collections.Generic;
 
 namespace ChatRoom.Domain.Services.Report
 {
     public interface IChatReportService
     {
-        IEnumerable<ChatReportDto> GetChatReportByHourlyAggreationLevel(IEnumerable<Event> events);
-        IEnumerable<ChatReportDto> GetChatReportByMinuteAggreationLevel(IEnumerable<Event> events);
+        IEnumerable<ChatReportDto> GetChatReportByHourlyAggreationLevel();
+        IEnumerable<ChatReportDto> GetChatReportByMinuteAggreationLevel();
     }
 }
