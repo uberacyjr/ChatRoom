@@ -1,6 +1,7 @@
 ﻿using ChatRoom.Data;
 using ChatRoom.Domain.Models;
 using ChatRoom.Shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,9 +16,10 @@ namespace ChatRoom.Domain.Services.Report
             StaticChatRoomData = staticChatRoomData;
         }
 
-        public IEnumerable<ChatReportDto> GetChatReportByMinuteAggreationLevel()
+        public IEnumerable<ChatReportDto> GetChatReportByMinuteAggregationLevel(DateTime dateFilter)
         {
             return StaticChatRoomData.GetAllEvents()
+                                     .Where(w => w.InsertedDate.Date == dateFilter.Date)
                                      .OrderBy(o => o.InsertedDate)
                                      .Select(s => new ChatReportDto
                                      {
@@ -28,11 +30,12 @@ namespace ChatRoom.Domain.Services.Report
                                      });
         }
 
-        public IEnumerable<ChatReportDto> GetChatReportByHourlyAggreationLevel()
+        public IEnumerable<ChatReportDto> GetChatReportByHourlyAggregationLevel(DateTime dateFilter)
         {
             var hourlyReportResult = new List<ChatReportDto>();
 
             var aggregatedEvents = StaticChatRoomData.GetAllEvents()
+                                                     .Where(w => w.InsertedDate.Date == dateFilter.Date)
                                                      .OrderBy(o => o.InsertedDate)
                                                      .GroupBy(g => new
                                                      {

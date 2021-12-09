@@ -1,5 +1,6 @@
 ﻿using ChatRoom.Domain.Services.Report;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 
 namespace ChatRoom.Test.DomainServicesTests
@@ -20,14 +21,14 @@ namespace ChatRoom.Test.DomainServicesTests
         [DataTestMethod]
         public void WhenGetHourlyReportReturnEventTypes(string assertMessage)
         {
-            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggreationLevel();
+            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggregationLevel(DateTime.Now);
             Assert.IsTrue(resultByHour.SelectMany(s => s.Descriptions).Any(a => a.Contains(assertMessage)));
         }
 
         [TestMethod]
         public void WhenGetHourlyReportReturnNullDescription()
         {
-            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggreationLevel();
+            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggregationLevel(DateTime.Now);
             foreach (var result in resultByHour)
             {
                 Assert.IsNull(result.Description);
@@ -37,7 +38,7 @@ namespace ChatRoom.Test.DomainServicesTests
         [TestMethod]
         public void WhenGetHourlyReportReturnAggregationLevel()
         {
-            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggreationLevel();
+            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggregationLevel(DateTime.Now);
             foreach (var result in resultByHour)
             {
                 Assert.IsNotNull(result.AggregationLevel);
@@ -47,7 +48,7 @@ namespace ChatRoom.Test.DomainServicesTests
         [TestMethod]
         public void WhenGetHourlyReportReturnDescriptions()
         {
-            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggreationLevel();
+            var resultByHour = ChatReportServiceUnderTest.GetChatReportByHourlyAggregationLevel(DateTime.Now);
             foreach (var result in resultByHour)
             {
                 Assert.IsNotNull(result.Descriptions);
@@ -61,14 +62,14 @@ namespace ChatRoom.Test.DomainServicesTests
         [DataTestMethod]
         public void WhenGetMinuteReportReturneEventTypes(string assertMessage)
         {
-            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggreationLevel();
+            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggregationLevel(DateTime.Now);
             Assert.IsTrue(resultByMinute.Any(a => a.Description.Contains(assertMessage)));
         }
 
         [TestMethod]
         public void WhenGetMinuteReportReturnDescription()
         {
-            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggreationLevel();
+            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggregationLevel(DateTime.Now);
             foreach (var result in resultByMinute)
             {
                 Assert.IsNotNull(result.Description);
@@ -78,7 +79,7 @@ namespace ChatRoom.Test.DomainServicesTests
         [TestMethod]
         public void WhenGetMinuteReportReturnAggregationLevel()
         {
-            var resultByHour = ChatReportServiceUnderTest.GetChatReportByMinuteAggreationLevel();
+            var resultByHour = ChatReportServiceUnderTest.GetChatReportByMinuteAggregationLevel(DateTime.Now);
             foreach (var result in resultByHour)
             {
                 Assert.IsNotNull(result.AggregationLevel);
@@ -88,7 +89,7 @@ namespace ChatRoom.Test.DomainServicesTests
         [TestMethod]
         public void WhenGetMinuteReportReturnNullDescriptions()
         {
-            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggreationLevel();
+            var resultByMinute = ChatReportServiceUnderTest.GetChatReportByMinuteAggregationLevel(DateTime.Now);
             foreach (var result in resultByMinute)
             {
                 Assert.IsNull(result.Descriptions);
