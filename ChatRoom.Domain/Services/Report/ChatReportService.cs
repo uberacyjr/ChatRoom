@@ -1,6 +1,6 @@
 ﻿using ChatRoom.Data;
 using ChatRoom.Domain.Models;
-using ChatRoom.Shared.Services;
+using ChatRoom.Shared.Helpers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace ChatRoom.Domain.Services.Report
                                      {
                                          AggregationLevel = s.InsertedDate.ToString("HH:mm tt"),
                                          Description = $"{s.User.Name} {s.EventType.Description} " +
-                                         $"{FormatStringHelperService.AddQuoteMark(s.Comment)} " +
+                                         $"{FormatStringHelper.AddQuoteMark(s.Comment)} " +
                                          $"{s.EventInteraction?.User?.Name}"
                                      });
         }
@@ -67,7 +67,7 @@ namespace ChatRoom.Domain.Services.Report
                     if (!groupedEventType.SelectMany(s => s.Users).Any())
                     {
                         result.Descriptions.Add($"{totalEvents} " +
-                            $"{FormatStringHelperService.GetPersonOrPeopleDescription(totalEvents)} " +
+                            $"{FormatStringHelper.GetPersonOrPeopleDescription(totalEvents)} " +
                             $"{eventDescription.Description}");
                     }
 
@@ -78,9 +78,9 @@ namespace ChatRoom.Domain.Services.Report
                     if (totalUserSentInteraction > 0)
                     {
                         result.Descriptions.Add($"{totalUserSentInteraction} " +
-                            $"{FormatStringHelperService.GetPersonOrPeopleDescription(totalUserSentInteraction)} " +
+                            $"{FormatStringHelper.GetPersonOrPeopleDescription(totalUserSentInteraction)} " +
                             $"{groupedEventType.FirstOrDefault().EventType.Description} {totalUserReceivedInteraction} " +
-                            $"other {FormatStringHelperService.GetPersonOrPeopleDescription(totalUserReceivedInteraction)}");
+                            $"other {FormatStringHelper.GetPersonOrPeopleDescription(totalUserReceivedInteraction)}");
                     }
                 }
 
